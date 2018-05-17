@@ -1,0 +1,13 @@
+[package]
+name = "py-rs-boilerplate"
+version = "0.0.0"
+authors = ["cthwaite <thwaite@gmail.com"]
+
+[lib]
+crate-type = ["cdylib"]
+name = "_core"
+path = "rs-lib/lib.rs"
+
+[dependencies.pyo3]
+version = "0.2"
+features = ["extension-module"]
