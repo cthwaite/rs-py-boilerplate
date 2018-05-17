@@ -16,7 +16,7 @@ except ImportError:
         raise SystemExit(err.errno)
 
 RUST_EXTENSIONS = [
-    RustExtension('rust_py_boilerplate._core',
+    RustExtension('rs_py_boilerplate._core',
                   'Cargo.toml',
                   binding=Binding.PyO3,
                   debug=None,
