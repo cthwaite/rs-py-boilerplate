@@ -4,5 +4,5 @@
 
 try:
     from ._core import sum_as_string
-except:
+except ImportError:
     from .pure import sum_as_string
