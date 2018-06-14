@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import os
 import subprocess
 
 from contextlib import contextmanager
@@ -26,6 +27,8 @@ except ImportError:
 from setuptools_rust import RustExtension, Binding
 from setuptools_rust.build import build_rust
 
+# Select the nightly toolchain using the RUSTUP_TOOLCHAIN environment variable
+USE_RUSTUP_TOOLCHAIN_ENV = True
 
 RUST_EXTENSIONS = [
     RustExtension('rs_py_boilerplate._core',
@@ -35,7 +38,6 @@ RUST_EXTENSIONS = [
                   strip=setuptools_rust.Strip.Debug,
                   native=True)
 ]
-
 
 @contextmanager
 def ensure_nightly():
@@ -69,6 +71,16 @@ class EnsureNightlyBuild(build_rust):
             super().run()
 
 
+if USE_RUSTUP_TOOLCHAIN_ENV:
+# ensure the nightly toolchain is used to build with PyO3
+    os.environ['RUSTUP_TOOLCHAIN'] = 'nightly'
+else:
+    CMDCLASS = {
+        'test': EnsureNightlyTest,
+        'build_rust': EnsureNightlyBuild,
+        'install': EnsureNightlyInstall
+    }
+
 
 SETUP_REQUIRES = ['pytest-runner', 'setuptools', 'setuptools_rust']
 
@@ -80,9 +92,5 @@ setup(name='rs_py_boilerplate',
       rust_extensions=RUST_EXTENSIONS,
       setup_requires=SETUP_REQUIRES,
       tests_require=['pytest'],
-      cmdclass = {
-          'test': EnsureNightlyTest,
-          'build_rust': EnsureNightlyBuild,
-          'install': EnsureNightlyInstall
-      },
+      cmdclass=CMDCLASS,
       zip_safe=False)
