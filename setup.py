@@ -74,6 +74,7 @@ class EnsureNightlyBuild(build_rust):
 if USE_RUSTUP_TOOLCHAIN_ENV:
 # ensure the nightly toolchain is used to build with PyO3
     os.environ['RUSTUP_TOOLCHAIN'] = 'nightly'
+    CMDCLASS = {}
 else:
     CMDCLASS = {
         'test': EnsureNightlyTest,
